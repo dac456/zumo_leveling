@@ -1,4 +1,0 @@
-/home/dcook/Development/zumo_leveling/build/CMakeFiles/leonardo_CORE.dir
-/home/dcook/Development/zumo_leveling/build/CMakeFiles/leonardo_Wire.dir
-/home/dcook/Development/zumo_leveling/build/CMakeFiles/zumo_leveling.dir
-/home/dcook/Development/zumo_leveling/build/CMakeFiles/zumo_leveling-size.dir

@@ -1,9 +1,11 @@
 #include "AlgorithmHillClimb.h"
+#include "Logger.h"
 
 ZumoHardware* hwd;
 AlgorithmHillClimb* alg;
 
 Zumo32U4ButtonA buttonA;
+Logger logger;
 
 void initialize(){
     init(); //AVR init - timers and things
@@ -43,13 +45,8 @@ int main(int argc, char* argv[])
         if(dt >= 100){
             alg->step(dt);         
             
-            //Dump the Z reading from the accelerometer for debugging            
-            char buf[8];
-            sprintf(buf, "%8.6f", sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf()));
-            Serial1.print('a');
-            Serial1.println(buf);
-            //hwd->lcd->gotoXY(0,1);
-            //hwd->lcd->print(buf);
+            //Dump the XYmag reading from the accelerometer for debugging            
+            logger.printXYAccelMag(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf()));
             
             
             last_time = millis();
