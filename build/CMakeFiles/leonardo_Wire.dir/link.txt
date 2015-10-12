@@ -1,0 +1,2 @@
+/usr/bin/avr-ar cr libleonardo_Wire.a  CMakeFiles/leonardo_Wire.dir/usr/share/arduino/libraries/Wire/Wire.cpp.obj CMakeFiles/leonardo_Wire.dir/usr/share/arduino/libraries/Wire/utility/twi.c.obj
+/usr/bin/avr-ranlib libleonardo_Wire.a
