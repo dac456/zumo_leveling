@@ -2,6 +2,7 @@
 #define __ALGORITHMBASE_H
 
 #include "Common.h"
+#include "Logger.h"
 
 class AlgorithmBase{
 private: 
@@ -28,6 +29,8 @@ private:
 protected:
     ZumoHardware* _hwd;
     char* _name;
+    
+    Logger logger;
     
 public:
     AlgorithmBase(ZumoHardware* hwd, uint16_t maxTurnSpeed = 100, uint16_t maxForwardSpeed = 100);

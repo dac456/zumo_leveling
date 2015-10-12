@@ -3,6 +3,12 @@
 
 #include "Common.h"
 
+typedef enum{
+    TURN_LEFT,
+    TURN_RIGHT,
+    COLLISION
+} ACTION;
+
 class Logger{
 private:
     
@@ -13,6 +19,7 @@ public:
     
     void printXYAccelMag(float val);
     void printAction(int val);
+    void printNewForwardSpeed(int val);
 
 };
 

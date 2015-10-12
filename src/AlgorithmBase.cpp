@@ -76,6 +76,8 @@ bool AlgorithmBase::isColliding(int16_t threshold){
     float mag = sqrt(Xf*Xf + Yf*Yf);
     
     if((mag > 0.4f) && (millis() - _timeLastTurn > 750) && (millis() - _timeLastCollision > 1000) && !_accelerating && (millis() - _timeLastAccel > 1000)){
+        logger.printAction(COLLIDING);
+        
         _timeLastCollision = millis();
         return true;
     }
@@ -91,6 +93,8 @@ void AlgorithmBase::turnLeft(){
         stop();
         
         _timeLastTurn = millis();
+        
+        logger.printAction(TURN_LEFT);
     }
 }
 
@@ -101,6 +105,8 @@ void AlgorithmBase::turnRight(){
         stop();
         
         _timeLastTurn = millis();
+        
+        logger.printAction(TURN_RIGHT);
     }
 }
 
@@ -128,6 +134,8 @@ void AlgorithmBase::setForwardSpeed(uint16_t speed){
     
     _curForwardSpeed = speed;
     _clampSpeed();
+    
+    logger.printNewForwardSpeed(speed);
 }
 
 void AlgorithmBase::step(uint16_t dt){

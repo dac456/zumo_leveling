@@ -23,3 +23,11 @@ void Logger::printAction(int val){
     Serial1.print('b');
     Serial1.println(buf);
 }
+
+void Logger::printNewForwardSpeed(int val){
+    char buf[14];
+    sprintf(buf, "%i", val);
+    
+    Serial1.print('c');
+    Serial1.println(buf);
+}
