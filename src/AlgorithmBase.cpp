@@ -76,7 +76,7 @@ bool AlgorithmBase::isColliding(int16_t threshold){
     float mag = sqrt(Xf*Xf + Yf*Yf);
     
     if((mag > 0.4f) && (millis() - _timeLastTurn > 750) && (millis() - _timeLastCollision > 1000) && !_accelerating && (millis() - _timeLastAccel > 1000)){
-        logger.printAction(COLLIDING);
+        logger.printAction(COLLISION);
         
         _timeLastCollision = millis();
         return true;
