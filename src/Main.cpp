@@ -47,7 +47,7 @@ int main(int argc, char* argv[])
             
             //Dump the XYmag reading from the accelerometer for debugging            
             logger.printXYAccelMag(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf()));
-            
+            logger.printPitch(alg->pitch());
             
             last_time = millis();
         }

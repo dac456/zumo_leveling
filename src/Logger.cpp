@@ -31,3 +31,11 @@ void Logger::printNewForwardSpeed(int val){
     Serial1.print('c');
     Serial1.println(buf);
 }
+
+void Logger::printPitch(float val){
+    char buf[14];
+    sprintf(buf, "%8.6f", val);
+    
+    Serial1.print('d');
+    Serial1.println(buf);     
+}

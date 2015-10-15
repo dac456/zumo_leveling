@@ -57,7 +57,10 @@ float AlgorithmBase::getAccelZf(){
 }
 
 float AlgorithmBase::pitch(){
-    return atan2(_accelX, sqrt(_accelY*_accelY + _accelZ*_accelZ));
+    //return atan2(_accelX, sqrt(_accelY*_accelY + _accelZ*_accelZ));
+    uint16_t y2 = uint16_t(_accelY*_accelY);
+    uint16_t z2 = uint16_t(_accelZ*_accelZ);
+    return atan(float(_accelX) / sqrt(y2+z2));
 }
 
 float AlgorithmBase::roll(){
@@ -75,7 +78,7 @@ bool AlgorithmBase::isColliding(int16_t threshold){
     float Yf = getAccelYf();
     float mag = sqrt(Xf*Xf + Yf*Yf);
     
-    if((mag > 0.4f) && (millis() - _timeLastTurn > 750) && (millis() - _timeLastCollision > 1000) && !_accelerating && (millis() - _timeLastAccel > 1000)){
+    if((mag < 0.05f) && (millis() - _timeLastTurn > 750) && (millis() - _timeLastCollision > 1000) && !_accelerating && (millis() - _timeLastAccel > 1000)){
         logger.printAction(COLLISION);
         
         _timeLastCollision = millis();
