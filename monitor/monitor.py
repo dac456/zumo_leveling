@@ -3,7 +3,6 @@
 import sys
 
 import serial
-import curses
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -16,30 +15,9 @@ if __name__ == '__main__':
         forward_speeds = [] #c
         pitch = [] #d
         
-        """stdscr = curses.initscr()
-        stdscr.nodelay(True)
-        stdscr.keypad(1)
-        
-        curses.noecho()
-        curses.cbreak()"""
-        
         print "Press Ctrl+C to break and gerate plots."
         
-        while True:  
-            
-            """stdscr.clear()
-            stdscr.addstr(0,0, "Press space to stop monitoring and generate plot")
-            
-            # http://ubuntuforums.org/showthread.php?t=1514035&p=9488711#post9488711
-            try:
-                key = stdscr.getkey()
-            except: # in no delay mode getkey raise and exeption if no key is press 
-                key = ""
-            if key == " ": # of we got a space then break
-                break     
-                
-            stdscr.addstr(1,0, key)
-            stdscr.refresh() """                 
+        while True:              
             
             try:
                 line = ser.readline()
@@ -66,10 +44,6 @@ if __name__ == '__main__':
                         pitch.append(np.degrees(val))
             except KeyboardInterrupt:
                 break
-                
-            #stdscr.refresh()
-                
-        #curses.endwin()
                 
         # Generate plot
         fig, ax = plt.subplots(nrows=2, ncols=2)
