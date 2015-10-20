@@ -19,12 +19,24 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, uint16_t maxTurnSpeed, uint16_t 
     _accelXFilter = new MovingAverage<int16_t>();
     _accelYFilter = new MovingAverage<int16_t>();
     _accelZFilter = new MovingAverage<int16_t>(-111);
+    
+    _rotXFilter = new MovingAverage<int16_t>();
+    _rotYFilter = new MovingAverage<int16_t>();
+    _rotZFilter = new MovingAverage<int16_t>();
+    
+    _pitch = new CompFilter<float>(0.98f);
 }
 
 AlgorithmBase::~AlgorithmBase(){
     delete _accelXFilter;
     delete _accelYFilter;
     delete _accelZFilter;
+    
+    delete _rotXFilter;
+    delete _rotYFilter;
+    delete _rotZFilter;
+    
+    delete _pitch;
 }
 
 char* AlgorithmBase::getName(){
@@ -56,6 +68,18 @@ float AlgorithmBase::getAccelZf(){
     return static_cast<float>(_accelZ) / 104.41575f;
 }
 
+float AlgorithmBase::getRotXf(){
+    return (static_cast<float>(_rotX) * 8.75f) / 1000.0f;
+}
+
+float AlgorithmBase::getRotYf(){
+    return (static_cast<float>(_rotY) * 8.75f) / 1000.0f;
+}
+
+float AlgorithmBase::getRotZf(){
+    return (static_cast<float>(_rotZ) * 8.75f) / 1000.0f;
+}
+
 float AlgorithmBase::pitch(){
     //return atan2(_accelX, sqrt(_accelY*_accelY + _accelZ*_accelZ));
     uint16_t y2 = uint16_t(_accelY*_accelY);
@@ -64,11 +88,16 @@ float AlgorithmBase::pitch(){
 }
 
 float AlgorithmBase::roll(){
-    return atan2(_accelY, sqrt(_accelY*_accelY + _accelX*_accelX));
+    return atan(-_accelY / _accelZ);
+    //return atan2(_accelY, sqrt(_accelY*_accelY + _accelX*_accelX));
 }
 
 float AlgorithmBase::yaw(){
     return atan2(sqrt(_accelX*_accelX + _accelY*_accelY), _accelZ);
+}
+
+float AlgorithmBase::pitchFiltered(){
+    _pitch->getFilteredValue();
 }
 
 bool AlgorithmBase::isColliding(int16_t threshold){
@@ -153,6 +182,13 @@ void AlgorithmBase::sense(uint16_t dt){
     _accelX = _accelXFilter->getFilteredValue(_hwd->compass->a.x/16);
     _accelY = _accelYFilter->getFilteredValue(_hwd->compass->a.y/16);
     _accelZ = _accelZFilter->getFilteredValue(_hwd->compass->a.z/16);
+    
+    _rotX = _rotXFilter->getFilteredValue(_hwd->gyro->g.x);
+    _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
+    _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
+    
+    _pitch->updateValues(this->getRotXf(), this->pitch() * (180.0f/M_PI));
+    _pitch->integrateV1(dt);
     
     senseImpl(dt);   
 }

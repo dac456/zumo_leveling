@@ -5,6 +5,7 @@
 #include <Zumo32U4.h>
 
 #include "MovingAverage.h"
+#include "CompFilter.h"
 
 struct ZumoHardware{
     ZumoHardware(){

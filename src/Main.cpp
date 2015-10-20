@@ -21,6 +21,8 @@ void initialize(){
     hwd->compass->init();
     hwd->compass->enableDefault();
     
+    hwd->gyro->init();
+    
     randomSeed(analogRead(0));
     
     //hwd->lcd->gotoXY(0,0);

@@ -19,6 +19,15 @@ private:
     int16_t _accelY;
     int16_t _accelZ;
     
+    MovingAverage<int16_t>* _rotXFilter;
+    MovingAverage<int16_t>* _rotYFilter;
+    MovingAverage<int16_t>* _rotZFilter;
+    int16_t _rotX;
+    int16_t _rotY;
+    int16_t _rotZ;
+    
+    CompFilter<float>* _pitch;
+    
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;
     
@@ -46,9 +55,15 @@ public:
     float getAccelYf();
     float getAccelZf();
     
+    float getRotXf();
+    float getRotYf();
+    float getRotZf();
+    
     float pitch();
     float roll();
     float yaw();
+    
+    float pitchFiltered();
     
     bool isColliding(int16_t threshold);
     
