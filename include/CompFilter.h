@@ -10,8 +10,7 @@ private:
     float _alpha, _beta;
     
 public:
-    CompFilter(float alpha)
-        : _alpha(alpha)
+    CompFilter(float alpha) : _alpha(alpha)
     {
         _v1 = T(0);
         _v2 = T(0);
