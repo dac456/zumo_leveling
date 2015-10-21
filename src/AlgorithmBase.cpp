@@ -97,7 +97,7 @@ float AlgorithmBase::yaw(){
 }
 
 float AlgorithmBase::pitchFiltered(){
-    _pitch->getFilteredValue();
+    return _pitch->getFilteredValue();
 }
 
 bool AlgorithmBase::isColliding(int16_t threshold){
@@ -177,7 +177,8 @@ void AlgorithmBase::step(uint16_t dt){
 
 void AlgorithmBase::sense(uint16_t dt){
     _hwd->compass->read();
-    _hwd->proxSensors->read(); 
+    _hwd->gyro->read();
+    //_hwd->proxSensors->read(); 
     
     _accelX = _accelXFilter->getFilteredValue(_hwd->compass->a.x/16);
     _accelY = _accelYFilter->getFilteredValue(_hwd->compass->a.y/16);
@@ -187,8 +188,7 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
     
-    _pitch->updateValues(this->getRotXf(), this->pitch() * (180.0f/M_PI));
-    _pitch->integrateV1(dt);
+    _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
     
     senseImpl(dt);   
 }

@@ -1,7 +1,7 @@
 #ifndef __MOVINGAVERAGE_H
 #define __MOVINGAVERAGE_H
 
-#define NUM_SAMPLES 10
+#define NUM_SAMPLES 7
 
 template<typename T>
 class MovingAverage{

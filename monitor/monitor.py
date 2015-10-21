@@ -41,7 +41,7 @@ if __name__ == '__main__':
                         val = float(line)
                         if np.isnan(val):
                             val = 0
-                        pitch.append(np.degrees(val))
+                        pitch.append(val)
             except KeyboardInterrupt:
                 break
                 

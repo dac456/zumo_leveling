@@ -22,6 +22,7 @@ void initialize(){
     hwd->compass->enableDefault();
     
     hwd->gyro->init();
+    hwd->gyro->enableDefault();
     
     randomSeed(analogRead(0));
     
