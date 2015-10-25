@@ -12,9 +12,9 @@ private:
     uint16_t _curTurnSpeed;
     uint16_t _curForwardSpeed;
     
-    MovingAverage<int16_t>* _accelXFilter;
-    MovingAverage<int16_t>* _accelYFilter;
-    MovingAverage<int16_t>* _accelZFilter;
+    LowpassFilter<int16_t>* _accelXFilter;
+    LowpassFilter<int16_t>* _accelYFilter;
+    LowpassFilter<int16_t>* _accelZFilter;
     int16_t _accelX;
     int16_t _accelY;
     int16_t _accelZ;

@@ -43,13 +43,16 @@ int main(int argc, char* argv[])
     
     buttonA.waitForButton();
     
+    LowpassFilter<float> xyMag(0.9f);
+    
     while(1){
         uint16_t dt = millis() - last_time;
         if(dt >= 100){
             alg->step(dt);         
             
             //Dump the XYmag reading from the accelerometer for debugging            
-            logger.printXYAccelMag(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf()));
+            logger.printXYAccelMag(xyMag.getFilteredValue(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf())));
+            //logger.printXYAccelMag(xyMag.getFilteredValue(alg->getAccelX()));
             logger.printPitch(alg->pitchFiltered());
             
             last_time = millis();

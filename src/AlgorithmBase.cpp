@@ -16,9 +16,9 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, uint16_t maxTurnSpeed, uint16_t 
 {
     _hwd = hwd;
     
-    _accelXFilter = new MovingAverage<int16_t>();
-    _accelYFilter = new MovingAverage<int16_t>();
-    _accelZFilter = new MovingAverage<int16_t>(-111);
+    _accelXFilter = new LowpassFilter<int16_t>(0.98f);
+    _accelYFilter = new LowpassFilter<int16_t>(0.98f);
+    _accelZFilter = new LowpassFilter<int16_t>(0.98f, -111);
     
     _rotXFilter = new MovingAverage<int16_t>();
     _rotYFilter = new MovingAverage<int16_t>();
