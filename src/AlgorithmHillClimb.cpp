@@ -10,7 +10,7 @@ AlgorithmHillClimb::AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed,
 {
     _name = "HillCli1";
     
-    setTurnSpeed(100);
+    setDesiredAngularVelocity(0.0f);
 }
 
 AlgorithmHillClimb::~AlgorithmHillClimb(){
@@ -40,9 +40,9 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
     //float sm = Z - 700.0f;
     //sm = sm/250.0f;
     //setForwardSpeed(floor((1.0f-sm)*400.0f) + 80);        
-    setForwardSpeed(80);
+    setDesiredLinearVelocity((fabs(pitchFiltered())/90.0f) * 0.3);
     
-    moveForward();
+    move();
     
     /*if(isColliding(150)){
         _hwd->buzzer->playNote(NOTE_G(3), 50, 12);

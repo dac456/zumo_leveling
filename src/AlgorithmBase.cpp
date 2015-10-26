@@ -1,11 +1,10 @@
 #include "AlgorithmBase.h"
 
-AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, uint16_t maxTurnSpeed, uint16_t maxForwardSpeed)
+AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, float maxAngular, float maxLinear, int16_t maxRpm)
     : //_hwd(hwd),
-      _maxTurnSpeed(maxTurnSpeed),
-      _maxForwardSpeed(maxForwardSpeed),
-      _curTurnSpeed(0),
-      _curForwardSpeed(0),
+      _maxAngular(maxAngular),
+      _maxLinear(maxLinear),
+      _maxRpm(maxRpm),
       _accelY(0),
       _accelZ(0),
       _timeLastTurn(0),
@@ -118,56 +117,44 @@ bool AlgorithmBase::isColliding(int16_t threshold){
     }
 }
 
-void AlgorithmBase::turnLeft(){
-    if(millis() - _timeLastTurn > 1000){
-        _hwd->motors->setSpeeds(_curTurnSpeed, -_curTurnSpeed);
-        delay(750);
-        stop();
-        
-        _timeLastTurn = millis();
-        
-        logger.printAction(TURN_LEFT);
-    }
-}
-
-void AlgorithmBase::turnRight(){
-    if(millis() - _timeLastTurn > 1000){
-        _hwd->motors->setSpeeds(-_curTurnSpeed, _curTurnSpeed);
-        delay(750);
-        stop();
-        
-        _timeLastTurn = millis();
-        
-        logger.printAction(TURN_RIGHT);
-    }
-}
-
-void AlgorithmBase::moveForward(){
-    _hwd->motors->setSpeeds(_curForwardSpeed, _curForwardSpeed);
-}
-
-void AlgorithmBase::moveBackward(){
-    _hwd->motors->setSpeeds(-_curForwardSpeed, -_curForwardSpeed);
+void AlgorithmBase::move(){
+    const float r = 0.01f; //wheel radius (m)
+    const float L = 0.05f; //wheel base (m)
+    
+    float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / 2.0f*r;
+    float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / 2.0f*r;
+    
+    uint16_t rpmLeft = floor((60.0f*vLeft) / (2.0f*M_PI*r));
+    uint16_t rpmRight = floor((60.0f*vRight) / (2.0f*M_PI*r));
+    
+    //TODO: assumes full 6V. need to account for battery degredation
+    float dutyCycleLeft = static_cast<float>(rpmLeft) / static_cast<float>(_maxRpm);
+    int16_t pwmLeft = static_cast<int16_t>(floor(dutyCycleLeft * 400.0f));
+    
+    float dutyCycleRight = static_cast<float>(rpmRight) / static_cast<float>(_maxRpm);
+    int16_t pwmRight = static_cast<int16_t>(floor(dutyCycleRight * 400.0f));    
+    
+    _hwd->motors->setSpeeds(pwmLeft, pwmRight);
 }
 
 void AlgorithmBase::stop(){
     _hwd->motors->setSpeeds(0,0);
 }
 
-void AlgorithmBase::setTurnSpeed(uint16_t speed){
-    _curTurnSpeed = speed;
+void AlgorithmBase::setDesiredAngularVelocity(float vel){
+    _desiredAngularVelocity = vel;
     _clampSpeed();
 }
 
-void AlgorithmBase::setForwardSpeed(uint16_t speed){
-    (speed > _lastSpeed) ? _accelerating = true : _accelerating = false;
-    _lastSpeed = speed;
-    if(_accelerating) _timeLastAccel = millis();
+void AlgorithmBase::setDesiredLinearVelocity(float vel){
+    //(speed > _lastSpeed) ? _accelerating = true : _accelerating = false;
+    //_lastSpeed = speed;
+    //if(_accelerating) _timeLastAccel = millis();
     
-    _curForwardSpeed = speed;
+    _desiredLinearVelocity = vel;
     _clampSpeed();
     
-    logger.printNewForwardSpeed(speed);
+    logger.printNewDesiredLinearVel(vel);
 }
 
 void AlgorithmBase::step(uint16_t dt){
@@ -198,11 +185,11 @@ void AlgorithmBase::act(uint16_t dt){
 }
 
 void AlgorithmBase::_clampSpeed(){
-    if(_curForwardSpeed > _maxForwardSpeed){
-        _curForwardSpeed = _maxForwardSpeed;
+    if(_desiredLinearVelocity > _maxLinear){
+        _desiredLinearVelocity = _maxLinear;
     }
     
-    if(_curTurnSpeed > _maxTurnSpeed){
-        _curTurnSpeed = _maxTurnSpeed;
+    if(_desiredAngularVelocity > _maxAngular){
+        _desiredAngularVelocity = _maxAngular;
     }
 }

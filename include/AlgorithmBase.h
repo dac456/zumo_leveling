@@ -6,11 +6,11 @@
 
 class AlgorithmBase{
 private: 
-    uint16_t _maxTurnSpeed;
-    uint16_t _maxForwardSpeed;
-    
-    uint16_t _curTurnSpeed;
-    uint16_t _curForwardSpeed;
+    float _desiredLinearVelocity;
+    float _desiredAngularVelocity;
+    float _maxLinear;
+    float _maxAngular;
+    uint16_t _maxRpm;
     
     LowpassFilter<int16_t>* _accelXFilter;
     LowpassFilter<int16_t>* _accelYFilter;
@@ -42,7 +42,7 @@ protected:
     Logger logger;
     
 public:
-    AlgorithmBase(ZumoHardware* hwd, uint16_t maxTurnSpeed = 100, uint16_t maxForwardSpeed = 100);
+    AlgorithmBase(ZumoHardware* hwd, float maxAngular = 0.1f, float maxLinear = 0.34f, int16_t maxRpm = 320);
     virtual ~AlgorithmBase();
     
     char* getName();
@@ -67,14 +67,11 @@ public:
     
     bool isColliding(int16_t threshold);
     
-    void turnLeft();
-    void turnRight();
-    void moveForward();
-    void moveBackward();
+    void move();
     void stop();
     
-    void setTurnSpeed(uint16_t speed);
-    void setForwardSpeed(uint16_t speed);
+    void setDesiredLinearVelocity(float vel);
+    void setDesiredAngularVelocity(float vel);
     
     void step(uint16_t dt);
     

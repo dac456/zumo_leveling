@@ -19,7 +19,7 @@ public:
     
     void printXYAccelMag(float val);
     void printAction(int val);
-    void printNewForwardSpeed(int val);
+    void printNewDesiredLinearVel(float val);
     void printPitch(float val);
 
 };

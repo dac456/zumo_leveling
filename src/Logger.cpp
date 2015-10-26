@@ -24,9 +24,9 @@ void Logger::printAction(int val){
     Serial1.println(buf);
 }
 
-void Logger::printNewForwardSpeed(int val){
+void Logger::printNewDesiredLinearVel(float val){
     char buf[14];
-    sprintf(buf, "%i", val);
+    sprintf(buf, "%8.6f", val);
     
     Serial1.print('c');
     Serial1.println(buf);
