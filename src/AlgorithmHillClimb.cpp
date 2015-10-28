@@ -40,7 +40,8 @@ void AlgorithmHillClimb::actImpl(uint16_t dt){
     //float sm = Z - 700.0f;
     //sm = sm/250.0f;
     //setForwardSpeed(floor((1.0f-sm)*400.0f) + 80);        
-    setDesiredLinearVelocity((fabs(pitchFiltered())/90.0f) * 0.3);
+    setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.05f);
+    //setDesiredAngularVelocity(0.2f);
     
     move();
     

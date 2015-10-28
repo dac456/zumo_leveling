@@ -32,10 +32,10 @@ if __name__ == '__main__':
                             pass
                     if(line[0] == 'b'):
                         line = line[1:]
-                        action.append(int(line))
+                        action.append(float(line))
                     if(line[0] == 'c'):
                         line = line[1:]
-                        forward_speeds.append(int(line))
+                        forward_speeds.append(float(line))
                     if(line[0] == 'd'):
                         line = line[1:]
                         val = float(line)
@@ -59,6 +59,10 @@ if __name__ == '__main__':
         ax[1,0].set_title("Forward Speed")
         ax[1,0].set_xlabel("Timesteps (100ms)")
         ax[1,0].plot([i for i in range(len(forward_speeds))], forward_speeds)
+        
+        ax[1,1].set_title("PWM Left")
+        ax[1,1].set_xlabel("Timesteps (100ms)")
+        ax[1,1].plot([i for i in range(len(action))], action)        
         
         plt.show()
         

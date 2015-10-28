@@ -16,9 +16,9 @@ void Logger::printXYAccelMag(float val){
     Serial1.println(buf);    
 }
 
-void Logger::printAction(int val){
+void Logger::printAction(float val){
     char buf[14];
-    sprintf(buf, "%i", val);
+    sprintf(buf, "%8.6f", val);
     
     Serial1.print('b');
     Serial1.println(buf);

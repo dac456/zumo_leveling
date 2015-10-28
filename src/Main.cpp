@@ -14,7 +14,7 @@ void initialize(){
     Wire.begin(); //Initialize I2C bus for compass/gyro
     
     hwd = new ZumoHardware;
-    alg = new AlgorithmHillClimb(hwd, 100, 400);
+    alg = new AlgorithmHillClimb(hwd);
     
     hwd->proxSensors->initThreeSensors(); //Initialize proximity sensors
     

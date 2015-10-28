@@ -18,7 +18,7 @@ public:
     ~Logger();
     
     void printXYAccelMag(float val);
-    void printAction(int val);
+    void printAction(float val);
     void printNewDesiredLinearVel(float val);
     void printPitch(float val);
 

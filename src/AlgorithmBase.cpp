@@ -119,13 +119,14 @@ bool AlgorithmBase::isColliding(int16_t threshold){
 
 void AlgorithmBase::move(){
     const float r = 0.01f; //wheel radius (m)
-    const float L = 0.05f; //wheel base (m)
+    const float L = 0.6f; //wheel base (m)
     
-    float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / 2.0f*r;
-    float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / 2.0f*r;
+    float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
+    float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
     
-    uint16_t rpmLeft = floor((60.0f*vLeft) / (2.0f*M_PI*r));
-    uint16_t rpmRight = floor((60.0f*vRight) / (2.0f*M_PI*r));
+    //rad/s -> rpm
+    int16_t rpmLeft = static_cast<int16_t>(floor(vLeft * 9.551f));
+    int16_t rpmRight = static_cast<int16_t>(floor(vRight * 9.551f));
     
     //TODO: assumes full 6V. need to account for battery degredation
     float dutyCycleLeft = static_cast<float>(rpmLeft) / static_cast<float>(_maxRpm);
@@ -134,6 +135,7 @@ void AlgorithmBase::move(){
     float dutyCycleRight = static_cast<float>(rpmRight) / static_cast<float>(_maxRpm);
     int16_t pwmRight = static_cast<int16_t>(floor(dutyCycleRight * 400.0f));    
     
+    logger.printAction(pwmLeft);
     _hwd->motors->setSpeeds(pwmLeft, pwmRight);
 }
 

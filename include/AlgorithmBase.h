@@ -42,7 +42,7 @@ protected:
     Logger logger;
     
 public:
-    AlgorithmBase(ZumoHardware* hwd, float maxAngular = 0.1f, float maxLinear = 0.34f, int16_t maxRpm = 320);
+    AlgorithmBase(ZumoHardware* hwd, float maxAngular = 10.0f, float maxLinear = 0.34f, int16_t maxRpm = 320);
     virtual ~AlgorithmBase();
     
     char* getName();
