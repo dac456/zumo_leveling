@@ -21,6 +21,7 @@ public:
     void printAction(float val);
     void printNewDesiredLinearVel(float val);
     void printPitch(float val);
+    void printHeading(float val);
 
 };
 

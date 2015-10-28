@@ -54,6 +54,7 @@ int main(int argc, char* argv[])
             logger.printXYAccelMag(xyMag.getFilteredValue(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf())));
             //logger.printXYAccelMag(xyMag.getFilteredValue(alg->getAccelX()));
             logger.printPitch(alg->pitchFiltered());
+            logger.printHeading(alg->yawFiltered());
             
             last_time = millis();
         }

@@ -24,6 +24,7 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, float maxAngular, float maxLinea
     _rotZFilter = new MovingAverage<int16_t>();
     
     _pitch = new CompFilter<float>(0.98f);
+    _heading = new CompFilter<float>(0.98f);
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -36,6 +37,7 @@ AlgorithmBase::~AlgorithmBase(){
     delete _rotZFilter;
     
     delete _pitch;
+    delete _heading;
 }
 
 char* AlgorithmBase::getName(){
@@ -92,11 +94,15 @@ float AlgorithmBase::roll(){
 }
 
 float AlgorithmBase::yaw(){
-    return atan2(sqrt(_accelX*_accelX + _accelY*_accelY), _accelZ);
+    return _hwd->compass->heading();
 }
 
 float AlgorithmBase::pitchFiltered(){
     return _pitch->getFilteredValue();
+}
+
+float AlgorithmBase::yawFiltered(){
+    return _heading->getFilteredValue();
 }
 
 bool AlgorithmBase::isColliding(int16_t threshold){
@@ -178,6 +184,7 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
     
     _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
+    _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
     
     senseImpl(dt);   
 }

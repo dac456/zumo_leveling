@@ -39,3 +39,11 @@ void Logger::printPitch(float val){
     Serial1.print('d');
     Serial1.println(buf);     
 }
+
+void Logger::printHeading(float val){
+    char buf[14];
+    sprintf(buf, "%8.6f", val);
+    
+    Serial1.print('e');
+    Serial1.println(buf);         
+}

@@ -27,6 +27,7 @@ private:
     int16_t _rotZ;
     
     CompFilter<float>* _pitch;
+    CompFilter<float>* _heading;
     
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;
@@ -64,6 +65,7 @@ public:
     float yaw();
     
     float pitchFiltered();
+    float yawFiltered();
     
     bool isColliding(int16_t threshold);
     
