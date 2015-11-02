@@ -2,10 +2,13 @@
 #define __ALGORITHMHILLCLIMB_H
 
 #include "AlgorithmBase.h"
+#include "PidController.h"
 
 class AlgorithmHillClimb : public AlgorithmBase{
 private:
     bool _inclined;
+    
+    PidController<float>* _headingPid;
     
 public:
     AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed = 100, uint16_t maxForwardSpeed = 100);

@@ -11,9 +11,13 @@ AlgorithmHillClimb::AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed,
     _name = "HillCli1";
     
     setDesiredAngularVelocity(0.0f);
+    
+    _headingPid = new PidController<float>(0.75f, 0.05f, 0.0f);
+    _headingPid->setReference(60.0f);
 }
 
 AlgorithmHillClimb::~AlgorithmHillClimb(){
+    delete _headingPid;
 }
 
 void AlgorithmHillClimb::senseImpl(uint16_t dt){
@@ -21,42 +25,10 @@ void AlgorithmHillClimb::senseImpl(uint16_t dt){
 }
 
 void AlgorithmHillClimb::actImpl(uint16_t dt){
-    /*float r = static_cast<float>(random(65535)) / 65535.0f;
-    if(r < 0.03f){
-        if(!_inclined){
-            (random(65535) % 2) ? turnLeft() : turnRight();
-        }
-    }*/
+    _headingPid->step(yawFiltered(), dt);
     
-    //(_inclined == true) ? setForwardSpeed(100) : setForwardSpeed(40);
-    uint16_t Z = getAccelZ();
-    if(Z > 950){
-        Z = 950;
-    }
-    if(Z < 700){
-        Z = 700;
-    }
-    
-    //float sm = Z - 700.0f;
-    //sm = sm/250.0f;
-    //setForwardSpeed(floor((1.0f-sm)*400.0f) + 80);        
     setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.05f);
-    //setDesiredAngularVelocity(0.2f);
+    setDesiredAngularVelocity(_headingPid->getValue() * (M_PI/180.0f));
     
     move();
-    
-    /*if(isColliding(150)){
-        _hwd->buzzer->playNote(NOTE_G(3), 50, 12);
-        
-        moveBackward();
-        delay(750);
-        turnRight();
-    }*/
-    /*if(_inclined){
-        setForwardSpeed(40);
-        moveForward();
-    }
-    else{
-        stop();
-    }*/
 }
