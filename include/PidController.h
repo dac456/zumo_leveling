@@ -31,7 +31,7 @@ public:
         float dtf = dt / 1000.0f;
         
         _derivative = (_error - _lastError) / dtf;
-        _integral += _error * dt;
+        _integral += _error * dtf;
         
         _u = (_p*_error) + (_i*_integral) + (_d*_derivative);
         
