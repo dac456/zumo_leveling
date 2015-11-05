@@ -9,11 +9,16 @@ import numpy as np
 if __name__ == '__main__':  
     if len(sys.argv) > 1:
         ser = serial.Serial(sys.argv[1], 57600)
+        ser.flush()
         
         accel_xy_mag_val = [] #a
         action = [] #b
         forward_speeds = [] #c
         pitch = [] #d
+        heading = [] #e
+        
+        mag_x = [] #f
+        acc_x = [] #g
         
         print "Press Ctrl+C to break and gerate plots."
         
@@ -42,6 +47,18 @@ if __name__ == '__main__':
                         if np.isnan(val):
                             val = 0
                         pitch.append(val)
+                    if(line[0] == 'e'):
+                        line = line[1:]
+                        val = float(line)
+                        heading.append(val)
+                    if(line[0] == 'f'):
+                        line = line[1:]
+                        val = int(line)
+                        mag_x.append(val)
+                    if(line[0] == 'g'):
+                        line = line[1:]
+                        val = int(line)
+                        acc_x.append(val)                                                
             except KeyboardInterrupt:
                 break
                 
@@ -60,11 +77,21 @@ if __name__ == '__main__':
         ax[1,0].set_xlabel("Timesteps (100ms)")
         ax[1,0].plot([i for i in range(len(forward_speeds))], forward_speeds)
         
-        ax[1,1].set_title("PWM Left")
+        ax[1,1].set_title("Heading")
         ax[1,1].set_xlabel("Timesteps (100ms)")
-        ax[1,1].plot([i for i in range(len(action))], action)        
+        ax[1,1].plot([i for i in range(len(heading))], heading)
+        """ax[1,0].set_title("Mag Y")
+        ax[1,0].set_xlabel("Timesteps (100ms)")
+        ax[1,0].plot([i for i in range(len(mag_x))], mag_x)
+        
+        ax[1,1].set_title("Mag Z")
+        ax[1,1].set_xlabel("Timesteps (100ms)")
+        ax[1,1].plot([i for i in range(len(acc_x))], acc_x)"""                  
         
         plt.show()
+        
+        ser.flush()
+        ser.close()
         
     else:
         print "Serial port must be specified."

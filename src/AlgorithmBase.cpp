@@ -24,7 +24,8 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, float maxAngular, float maxLinea
     _rotZFilter = new MovingAverage<int16_t>();
     
     _pitch = new CompFilter<float>(0.98f);
-    _heading = new CompFilter<float>(0.98f);
+    //_heading = new CompFilter<float>(0.25f);
+    _heading = new LowpassFilter<float>(0.98f);
 }
 
 AlgorithmBase::~AlgorithmBase(){
@@ -89,12 +90,12 @@ float AlgorithmBase::pitch(){
 }
 
 float AlgorithmBase::roll(){
-    return atan(-_accelY / _accelZ);
+    return atan(float(-_accelY) / float(_accelZ));
     //return atan2(_accelY, sqrt(_accelY*_accelY + _accelX*_accelX));
 }
 
 float AlgorithmBase::yaw(){
-    return _hwd->compass->heading();
+    return _hwd->compass->heading(LSM303::vector<int>{1,0,0});
 }
 
 float AlgorithmBase::pitchFiltered(){
@@ -102,7 +103,7 @@ float AlgorithmBase::pitchFiltered(){
 }
 
 float AlgorithmBase::yawFiltered(){
-    return _heading->getFilteredValue();
+    return _heading->getFilteredValue(yaw());
 }
 
 bool AlgorithmBase::isColliding(int16_t threshold){
@@ -175,6 +176,9 @@ void AlgorithmBase::sense(uint16_t dt){
     _hwd->gyro->read();
     //_hwd->proxSensors->read(); 
     
+    logger.printMagX(_hwd->compass->m.y);
+    logger.printAccX(_hwd->compass->m.z);
+    
     _accelX = _accelXFilter->getFilteredValue(_hwd->compass->a.x/16);
     _accelY = _accelYFilter->getFilteredValue(_hwd->compass->a.y/16);
     _accelZ = _accelZFilter->getFilteredValue(_hwd->compass->a.z/16);
@@ -184,7 +188,7 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
     
     _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
-    _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
+    //_heading->integrateValues(this->getRotZf(), this->yaw(), dt);
     
     senseImpl(dt);   
 }

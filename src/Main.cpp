@@ -21,6 +21,9 @@ void initialize(){
     hwd->compass->init();
     hwd->compass->enableDefault();
     
+    hwd->compass->m_min = (LSM303::vector<int16_t>){-5450, -5633, -1190};
+    hwd->compass->m_max = (LSM303::vector<int16_t>){-912, -2516, +1164};    
+    
     hwd->gyro->init();
     hwd->gyro->enableDefault();
     

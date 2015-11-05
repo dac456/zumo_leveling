@@ -47,3 +47,19 @@ void Logger::printHeading(float val){
     Serial1.print('e');
     Serial1.println(buf);         
 }
+
+void Logger::printMagX(int val){
+    char buf[14];
+    sprintf(buf, "%i", val);
+    
+    Serial1.print('f');
+    Serial1.println(buf);
+}
+
+void Logger::printAccX(int val){
+    char buf[14];
+    sprintf(buf, "%i", val);
+    
+    Serial1.print('g');
+    Serial1.println(buf);
+}

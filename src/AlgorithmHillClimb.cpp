@@ -12,7 +12,7 @@ AlgorithmHillClimb::AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed,
     
     setDesiredAngularVelocity(0.0f);
     
-    _headingPid = new PidController<float>(0.75f, 0.05f, 0.0f);
+    _headingPid = new PidController<float>(0.05f, 0.0f);
     _headingPid->setReference(60.0f);
 }
 

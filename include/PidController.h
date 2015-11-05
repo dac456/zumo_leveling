@@ -13,7 +13,7 @@ private:
     T _error, _lastError;
     
 public:	    
-    PidController(float p, float i, float d)
+    PidController(float p, float i, float d = 0.0f)
         : _p(p), _i(i), _d(d)
     {
         _integral = T(0);
@@ -31,7 +31,7 @@ public:
         float dtf = dt / 1000.0f;
         
         _derivative = (_error - _lastError) / dtf;
-        _integral += _error * dtf;
+        _integral += (_error * dtf);
         
         _u = (_p*_error) + (_i*_integral) + (_d*_derivative);
         

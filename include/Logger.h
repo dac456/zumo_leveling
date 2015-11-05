@@ -22,6 +22,13 @@ public:
     void printNewDesiredLinearVel(float val);
     void printPitch(float val);
     void printHeading(float val);
+    
+    void printMagX(int val);
+    //void printMagY(int val);
+    //void printMagZ(int val);
+    void printAccX(int val);
+    //void printAccY(int val);
+    //void printAccZ(int val);
 
 };
 
