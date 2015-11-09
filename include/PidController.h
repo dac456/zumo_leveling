@@ -28,6 +28,11 @@ public:
     
     void step(T val, uint16_t dt){
         _error = _setPoint - val;
+        
+        //TODO: this is not general - should be moved to a functor argument
+        if(_error < -180) _error += T(360);
+        else if(_error > 180) _error -= T(360);
+        
         float dtf = dt / 1000.0f;
         
         _derivative = (_error - _lastError) / dtf;
