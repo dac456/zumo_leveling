@@ -187,7 +187,9 @@ void AlgorithmBase::sense(uint16_t dt){
     _rotY = _rotYFilter->getFilteredValue(_hwd->gyro->g.y);
     _rotZ = _rotZFilter->getFilteredValue(_hwd->gyro->g.z);
     
-    _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
+    if(!isnan(this->pitch())){
+        _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
+    }
     _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
     
     senseImpl(dt);   
