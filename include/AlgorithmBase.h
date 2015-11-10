@@ -27,8 +27,8 @@ private:
     int16_t _rotZ;
     
     CompFilter<float>* _pitch;
-    //CompFilter<float>* _heading;
-    LowpassFilter<float>* _heading;
+    CompFilter<float>* _heading;
+    //LowpassFilter<float>* _heading;
     
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;

@@ -32,6 +32,9 @@ public:
         //TODO: this is not general - should be moved to a functor argument
         if(_error < -180) _error += T(360);
         else if(_error > 180) _error -= T(360);
+        /*if((_error < 0 && _lastError > 0) || (_error > 0 && _lastError < 0)){
+            _error = -_error;
+        }*/
         
         float dtf = dt / 1000.0f;
         
