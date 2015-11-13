@@ -9,15 +9,16 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, float maxAngular, float maxLinea
       _accelZ(0),
       _timeLastTurn(0),
       _timeLastCollision(0),
+      _lastXYMag(0.0f),
       _lastSpeed(0),
       _timeLastAccel(0),
       _accelerating(false)
 {
     _hwd = hwd;
     
-    _accelXFilter = new LowpassFilter<int16_t>(0.98f);
-    _accelYFilter = new LowpassFilter<int16_t>(0.98f);
-    _accelZFilter = new LowpassFilter<int16_t>(0.98f, -111);
+    _accelXFilter = new LowpassFilter<int16_t>(0.75f);
+    _accelYFilter = new LowpassFilter<int16_t>(0.75f);
+    _accelZFilter = new LowpassFilter<int16_t>(0.75f, -111);
     
     _rotXFilter = new MovingAverage<int16_t>();
     _rotYFilter = new MovingAverage<int16_t>();
@@ -106,27 +107,29 @@ float AlgorithmBase::yawFiltered(){
     return _heading->getFilteredValue();
 }
 
-bool AlgorithmBase::isColliding(int16_t threshold){
+bool AlgorithmBase::isColliding(float threshold){
     //int16_t thresh2 = threshold*threshold;
     //int16_t xyDot = _accelX*_accelX + _accelY*_accelY;
     float Xf = getAccelXf();
     float Yf = getAccelYf();
     float mag = sqrt(Xf*Xf + Yf*Yf);
     
-    if((mag < 0.05f) && (millis() - _timeLastTurn > 750) && (millis() - _timeLastCollision > 1000) && !_accelerating && (millis() - _timeLastAccel > 1000)){
+    if( ((mag - _lastXYMag) <= 0.0f) && (mag >= 0.0f) && (fabs(mag - _lastXYMag) >= threshold) && ((millis() - _timeLastCollision) > 750) ){
         logger.printAction(COLLISION);
         
+        _lastXYMag = mag;
         _timeLastCollision = millis();
         return true;
     }
     else{
+        _lastXYMag = mag;
         return false;
     }
 }
 
 void AlgorithmBase::move(){
-    const float r = 0.01f; //wheel radius (m)
-    const float L = 0.6f; //wheel base (m)
+    const float r = 0.016f; //wheel radius (m)
+    const float L = 0.0875f; //wheel base (m)
     
     float vLeft = ((2.0f*_desiredLinearVelocity) - (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s
     float vRight = ((2.0f*_desiredLinearVelocity) + (L*_desiredAngularVelocity)) / (2.0f*r); //rad/s

@@ -33,6 +33,7 @@ private:
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;
     
+    float _lastXYMag;
     uint16_t _lastSpeed;
     uint16_t _timeLastAccel;
     bool _accelerating;
@@ -68,7 +69,7 @@ public:
     float pitchFiltered();
     float yawFiltered();
     
-    bool isColliding(int16_t threshold);
+    bool isColliding(float threshold);
     
     void move();
     void stop();

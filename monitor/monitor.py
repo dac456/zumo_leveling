@@ -65,7 +65,7 @@ if __name__ == '__main__':
         # Generate plot
         fig, ax = plt.subplots(nrows=2, ncols=2)
         
-        ax[0,0].set_title("XY Acceleration Magnitude")
+        ax[0,0].set_title("X Acceleration Mag (m/s/s)")
         #ax[0,0].set_xlabel("Timesteps (100ms)")
         ax[0,0].plot([i for i in range(len(accel_xy_mag_val))], accel_xy_mag_val)
         

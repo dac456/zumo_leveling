@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
             alg->step(dt);         
             
             //Dump the XYmag reading from the accelerometer for debugging            
-            logger.printXYAccelMag(xyMag.getFilteredValue(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelYf()*alg->getAccelYf())));
+            logger.printXYAccelMag(sqrt(alg->getAccelXf()*alg->getAccelXf() + alg->getAccelZf()*alg->getAccelZf()));
             //logger.printXYAccelMag(xyMag.getFilteredValue(alg->getAccelX()));
             logger.printPitch(alg->pitchFiltered());
             logger.printHeading(alg->yawFiltered());

@@ -13,7 +13,7 @@ AlgorithmHillClimb::AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed,
     setDesiredLinearVelocity(0.0f);
     setDesiredAngularVelocity(0.0f);
     
-    _headingPid = new PidController<float>(0.075f, 0.0025f);
+    _headingPid = new PidController<float>(0.15f, 0.025f);
     _headingPid->setReference(60.0f);
 }
 
@@ -28,8 +28,18 @@ void AlgorithmHillClimb::senseImpl(uint16_t dt){
 void AlgorithmHillClimb::actImpl(uint16_t dt){
     _headingPid->step(yawFiltered(), dt);
     
-    setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.05f);
-    setDesiredAngularVelocity((-_headingPid->getValue()) * (M_PI/180.0f));
+    //if(!isColliding(0.3f)){
+        setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f);
+        setDesiredAngularVelocity(0.0f);
+        move();
+    /*}
+    else{
+        setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f));
+        setDesiredAngularVelocity(1.5f);
+        move();
+        delay(1500);
+    }*/
+    //setDesiredAngularVelocity((-_headingPid->getValue()) * (M_PI/180.0f));
     
-    move();
+    //move();
 }
