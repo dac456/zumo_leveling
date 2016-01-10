@@ -7,6 +7,9 @@
 class AlgorithmHillClimb : public AlgorithmBase{
 private:
     bool _inclined;
+    bool _reversing;
+    uint16_t _timeLastCollide;
+    uint16_t _reverseCount;
     
     PidController<float>* _headingPid;
     

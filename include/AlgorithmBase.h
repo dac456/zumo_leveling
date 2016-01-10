@@ -33,7 +33,7 @@ private:
     uint16_t _timeLastTurn;
     uint16_t _timeLastCollision;
     
-    float _lastXYMag;
+    Queue<float> _xyMag;
     uint16_t _lastSpeed;
     uint16_t _timeLastAccel;
     bool _accelerating;

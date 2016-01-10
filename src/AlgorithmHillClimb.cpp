@@ -6,7 +6,10 @@ float lerp(float v0, float v1, float t){
 
 AlgorithmHillClimb::AlgorithmHillClimb(ZumoHardware* hwd, uint16_t maxTurnSpeed, uint16_t maxForwardSpeed)
     : AlgorithmBase(hwd, maxTurnSpeed, maxForwardSpeed),
-      _inclined(false)
+      _inclined(false),
+      _reversing(false),
+      _timeLastCollide(0),
+      _reverseCount(0)
 {
     _name = "HillCli1";
     
@@ -28,17 +31,37 @@ void AlgorithmHillClimb::senseImpl(uint16_t dt){
 void AlgorithmHillClimb::actImpl(uint16_t dt){
     _headingPid->step(yawFiltered(), dt);
     
-    //if(!isColliding(0.3f)){
+    /*if(!isColliding(0.5f) && (_reverseCount = 0)){
         setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f);
         setDesiredAngularVelocity(0.0f);
         move();
-    /*}
+    }
     else{
+        _reverseCount++;
+        setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f));
+        setDesiredAngularVelocity(0.0f);
+        move();
+        
+        if(_reverseCount > 20) _reverseCount = 0;
+    }*/
+    if(_reverseCount == 0) (isColliding(0.5f) && (millis() - _timeLastCollide > 4000)) ? _reversing = true : _reversing = false;
+    
+    if(_reversing){
+        _reverseCount++;
         setDesiredLinearVelocity(-(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f));
         setDesiredAngularVelocity(1.5f);
         move();
-        delay(1500);
-    }*/
+        
+        if(_reverseCount > 15) {
+            _reverseCount = 0;
+            _timeLastCollide = millis();
+        }        
+    }
+    else{
+        setDesiredLinearVelocity(((fabs(pitchFiltered())/90.0f) * 0.3) + 0.1f);
+        setDesiredAngularVelocity(0.0f);
+        move();        
+    }
     //setDesiredAngularVelocity((-_headingPid->getValue()) * (M_PI/180.0f));
     
     //move();

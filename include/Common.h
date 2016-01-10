@@ -7,6 +7,7 @@
 #include "MovingAverage.h"
 #include "CompFilter.h"
 #include "LowpassFilter.h"
+#include "Queue.h"
 
 struct ZumoHardware{
     ZumoHardware(){

@@ -9,7 +9,6 @@ AlgorithmBase::AlgorithmBase(ZumoHardware* hwd, float maxAngular, float maxLinea
       _accelZ(0),
       _timeLastTurn(0),
       _timeLastCollision(0),
-      _lastXYMag(0.0f),
       _lastSpeed(0),
       _timeLastAccel(0),
       _accelerating(false)
@@ -110,19 +109,19 @@ float AlgorithmBase::yawFiltered(){
 bool AlgorithmBase::isColliding(float threshold){
     //int16_t thresh2 = threshold*threshold;
     //int16_t xyDot = _accelX*_accelX + _accelY*_accelY;
-    float Xf = getAccelXf();
-    float Yf = getAccelYf();
-    float mag = sqrt(Xf*Xf + Yf*Yf);
     
-    if( ((mag - _lastXYMag) <= 0.0f) && (mag >= 0.0f) && (fabs(mag - _lastXYMag) >= threshold) && ((millis() - _timeLastCollision) > 750) ){
-        logger.printAction(COLLISION);
-        
-        _lastXYMag = mag;
-        _timeLastCollision = millis();
-        return true;
+    if(_xyMag.size() > 1){
+        if( ((_xyMag[0] - _xyMag[1]) <= 0.0f) && (_xyMag[0] >= 0.0f) && (fabs(_xyMag[0] - _xyMag[1]) >= threshold) ){
+            logger.printAction(COLLISION);
+            
+            _timeLastCollision = millis();
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     else{
-        _lastXYMag = mag;
         return false;
     }
 }
@@ -194,6 +193,14 @@ void AlgorithmBase::sense(uint16_t dt){
         _pitch->integrateValues(-this->getRotYf(), this->pitch() * (180.0f/M_PI), dt);
     }
     _heading->integrateValues(this->getRotZf(), this->yaw(), dt);
+    
+    float Xf = getAccelXf();
+    float Yf = getAccelYf();
+    float mag = sqrt(Xf*Xf + Yf*Yf);
+    _xyMag.push(mag);
+    if(_xyMag.size() > 10){
+        _xyMag.pop();
+    }
     
     senseImpl(dt);   
 }
